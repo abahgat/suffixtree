@@ -28,3 +28,21 @@ The union of all the edge labels from the root to a given leaf node denotes the 
 In addition to those Strings, there are a set of different strings that are implicitly contained within the GST, and it is composed of the strings built by concatenating _e1.label + e2.label + ... + $end_, where _e1, e2, …_ is a proper path and _$end_ is prefix of any of the labels of the edges starting from the last node of the path.
 
 This kind of "implicit path" is important in the testAndSplit method.
+
+## License
+
+This Generalized Suffix Tree is released under the Apache License 2.0
+
+   Copyright 2012 Alessandro Bahgat Shehata
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
