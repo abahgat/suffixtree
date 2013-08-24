@@ -107,16 +107,14 @@ class Node {
             }
         }
         // need to get more matches from child nodes. This is what may waste time
-        int missingItems = numElements == -1 ? -1 : numElements - ret.size();
         for (Edge e : edges.values()) {
             if (-1 == numElements || ret.size() < numElements) {
-                for (int num : e.getDest().getData(missingItems)) {
+                for (int num : e.getDest().getData()) {
                     ret.add(num);
                     if (ret.size() == numElements) {
                         return ret;
                     }
                 }
-                missingItems = numElements == -1 ? -1 : numElements - ret.size();
             }
         }
         return ret;
@@ -176,30 +174,27 @@ class Node {
      * Computes the number of results that are stored on this node and on its
      * children, and caches the result.
      * 
-     * @param recursive if true, it performs the same operation on subnodes as well
+     * Performs the same operation on subnodes as well
      * @return the number of results
-     * @see Node#getResultCount() 
      */
-    public int computeAndCacheCount(boolean recursive) {
-        resultCount = getData().size();
-
-        if (recursive) {
-            for (Edge e : edges.values()) {
-                e.getDest().computeAndCacheCount();
-            }
-        }
-
+    protected int computeAndCacheCount() {
+        computeAndCacheCountRecursive();
         return resultCount;
     }
 
-    /**
-     * Computes the number of results that are stored on this node and on its
-     * children, and caches the result.
-     * 
-     * Performs the same operation on subnodes as well
-     */
-    public int computeAndCacheCount() {
-        return computeAndCacheCount(true);
+    private Set<Integer> computeAndCacheCountRecursive() {
+        Set<Integer> ret = new HashSet<Integer>();
+        for (int num : data) {
+            ret.add(num);
+        }
+        for (Edge e : edges.values()) {
+            for (int num : e.getDest().computeAndCacheCountRecursive()) {
+                ret.add(num);
+            }
+        }
+
+        resultCount = ret.size();
+        return ret;
     }
 
     /**
