@@ -55,7 +55,7 @@ class Node {
     /**
      * The set of edges starting from this node
      */
-    private EdgeBag edges;
+    private final EdgeBag edges;
     /**
      * The suffix link as described in Ukkonen's paper.
      * if str is the string denoted by the path from the root to this, this.suffix
@@ -128,7 +128,7 @@ class Node {
             return;
         }
 
-        addidx(index);
+        addIndex(index);
 
         // add this reference to all the suffixes as well
         Node iter = this.suffix;
@@ -152,20 +152,20 @@ class Node {
      */
     private boolean contains(int index) {
         int low = 0;
-	int high = lastIdx - 1;
+        int high = lastIdx - 1;
 
-	while (low <= high) {
-	    int mid = (low + high) >>> 1;
-	    int midVal = data[mid];
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            int midVal = data[mid];
 
-	    if (midVal < index)
-		low = mid + 1;
-	    else if (midVal > index)
-		high = mid - 1;
-	    else
-		return true;
-	}
-	return false;
+            if (midVal < index)
+            low = mid + 1;
+            else if (midVal > index)
+            high = mid - 1;
+            else
+            return true;
+        }
+        return false;
         // Java 5 equivalent to
         // return java.util.Arrays.binarySearch(data, 0, lastIdx, index) >= 0;
     }
@@ -236,7 +236,7 @@ class Node {
         this.suffix = suffix;
     }
 
-    private void addidx(int index) {
+    private void addIndex(int index) {
         if (lastIdx == data.length) {
             int[] copy = new int[data.length + INCREMENT];
             System.arraycopy(data, 0, copy, 0, data.length);

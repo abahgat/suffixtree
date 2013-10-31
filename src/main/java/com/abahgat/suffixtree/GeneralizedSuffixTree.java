@@ -61,7 +61,7 @@ public class GeneralizedSuffixTree {
     /**
      * The root of the suffix tree
      */
-    private Node root = new Node();
+    private final Node root = new Node();
     /**
      * The last leaf that was added during the update operation
      */
@@ -122,7 +122,7 @@ public class GeneralizedSuffixTree {
          * If such a path is found, the last node on it is returned.
          */
         Node currentNode = root;
-        Edge currentEdge = null;
+        Edge currentEdge;
 
         for (int i = 0; i < word.length(); ++i) {
             char ch = word.charAt(i);
@@ -345,7 +345,7 @@ public class GeneralizedSuffixTree {
         Node r = ret.getSecond();
         boolean endpoint = ret.getFirst();
 
-        Node leaf = null;
+        Node leaf;
         // line 2
         while (!endpoint) {
             // line 3
@@ -446,8 +446,8 @@ public class GeneralizedSuffixTree {
      */
     private class Pair<A, B> {
 
-        private A first;
-        private B second;
+        private final A first;
+        private final B second;
 
         public Pair(A first, B second) {
             this.first = first;
