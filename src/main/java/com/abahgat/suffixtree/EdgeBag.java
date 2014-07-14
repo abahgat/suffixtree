@@ -15,12 +15,24 @@
  */
 package com.abahgat.suffixtree;
 
-class EdgeBag {
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * A specialized implementation of Map that uses native char types and sorted
+ * arrays to keep minimize the memory footprint.
+ * Implements only the operations that are needed within the suffix tree context.
+ */
+class EdgeBag implements Map<Character, Edge> {
     private byte[] chars;
     private Edge[] values;
     private static final int BSEARCH_THRESHOLD = 6;
 
-    void put(char c, Edge e) {
+    @Override
+    public Edge put(Character character, Edge e) {
+        char c = character.charValue();
         if (c != (char) (byte) c) {
             throw new IllegalArgumentException("Illegal input character " + c + ".");
         }
@@ -30,6 +42,7 @@ class EdgeBag {
             values = new Edge[0];
         }
         int idx = search(c);
+        Edge previous = null;
 
         if (idx < 0) {
             int currsize = chars.length;
@@ -46,11 +59,18 @@ class EdgeBag {
                 sortArrays();
             }
         } else {
+            previous = values[idx];
             values[idx] = e;
         }
+        return previous;
+    }
+    
+    @Override
+    public Edge get(Object maybeCharacter) {
+        return get(((Character) maybeCharacter).charValue());  // throws if cast fails.
     }
 
-    Edge get(char c) {
+    public Edge get(char c) {
         if (c != (char) (byte) c) {
             throw new IllegalArgumentException("Illegal input character " + c + ".");
         }
@@ -78,8 +98,9 @@ class EdgeBag {
         return -1;
     }
 
-    Edge[] values() {
-        return values == null ? new Edge[0] : values;
+    @Override
+    public Collection<Edge> values() {
+        return Arrays.asList(values == null ? new Edge[0] : values);
     }
     
     /**
@@ -101,5 +122,50 @@ class EdgeBag {
             }
          }
       }
+    }
+    
+    @Override
+    public boolean isEmpty() {
+        return chars == null || chars.length == 0;
+    }
+    
+    @Override
+    public int size() {
+        return chars == null ? 0 : chars.length;
+    }
+    
+    @Override
+    public Set<Map.Entry<Character, Edge>> entrySet() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+    
+    @Override
+    public Set<Character> keySet() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+    
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+    
+    @Override
+    public void putAll(Map<? extends Character, ? extends Edge> m) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+    
+    @Override
+    public Edge remove(Object key) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+    
+    @Override
+    public boolean containsKey(Object key) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+    
+    @Override
+    public boolean containsValue(Object key) {
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

@@ -55,7 +55,7 @@ public class EdgeBagTest {
         bag.put('e', e2);
         bag.put('f', e3);
         bag.put('b', e4);
-        assertTrue("Bag contains " + bag.values().length + " elements", bag.values().length == 4);
+        assertTrue("Bag contains " + bag.values().size() + " elements", bag.values().size() == 4);
         assertTrue(bag.get('a').equals(e1));
         assertTrue(bag.get('e').equals(e2));
         assertTrue(bag.get('f').equals(e3));

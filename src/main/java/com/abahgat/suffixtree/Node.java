@@ -17,6 +17,7 @@ package com.abahgat.suffixtree;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -55,7 +56,7 @@ class Node {
     /**
      * The set of edges starting from this node
      */
-    private final EdgeBag edges;
+    private final Map<Character, Edge> edges;
     /**
      * The suffix link as described in Ukkonen's paper.
      * if str is the string denoted by the path from the root to this, this.suffix
@@ -224,7 +225,7 @@ class Node {
         return edges.get(ch);
     }
 
-    EdgeBag getEdges() {
+    Map<Character, Edge> getEdges() {
         return edges;
     }
 
