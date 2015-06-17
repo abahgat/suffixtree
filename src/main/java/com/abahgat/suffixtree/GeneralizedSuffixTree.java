@@ -90,7 +90,7 @@ public class GeneralizedSuffixTree {
     public Collection<Integer> search(String word, int results) {
         Node tmpNode = searchNode(word);
         if (tmpNode == null) {
-            return null;
+            return Collections.EMPTY_LIST;
         }
         return tmpNode.getData(results);
     }

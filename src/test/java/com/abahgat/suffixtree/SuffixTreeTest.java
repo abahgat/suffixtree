@@ -23,6 +23,10 @@ import static com.abahgat.suffixtree.Utils.getSubstrings;
 
 public class SuffixTreeTest extends TestCase {
 
+    public static <E> void assertEmpty(Collection<E> collection) {
+        assertTrue("Expected empty collection.", collection.isEmpty());
+    }
+
     public void testBasicTreeGeneration() {
         GeneralizedSuffixTree in = new GeneralizedSuffixTree();
 
@@ -33,9 +37,9 @@ public class SuffixTreeTest extends TestCase {
         for (String s : getSubstrings(word)) {
             assertTrue(in.search(s).contains(0));
         }
-        assertNull(in.search("caco"));
-        assertNull(in.search("cacaoo"));
-        assertNull(in.search("ccacao"));
+        assertEmpty(in.search("caco"));
+        assertEmpty(in.search("cacaoo"));
+        assertEmpty(in.search("ccacao"));
 
         in = new GeneralizedSuffixTree();
         word = "bookkeeper";
@@ -43,9 +47,9 @@ public class SuffixTreeTest extends TestCase {
         for (String s : getSubstrings(word)) {
             assertTrue(in.search(s).contains(0));
         }
-        assertNull(in.search("books"));
-        assertNull(in.search("boke"));
-        assertNull(in.search("ookepr"));
+        assertEmpty(in.search("books"));
+        assertEmpty(in.search("boke"));
+        assertEmpty(in.search("ookepr"));
     }
 
     public void testWeirdword() {
@@ -138,7 +142,7 @@ public class SuffixTreeTest extends TestCase {
         in.computeCount();
         testResultsCount(in.getRoot());
 
-        assertNull(in.search("aoca"));
+        assertEmpty(in.search("aoca"));
     }
 
     public void testSampleAddition() {
@@ -201,7 +205,7 @@ public class SuffixTreeTest extends TestCase {
         in.computeCount();
         testResultsCount(in.getRoot());
 
-        assertNull(in.search("aoca"));
+        assertEmpty(in.search("aoca"));
     }
 
     private void testResultsCount(Node n) {
