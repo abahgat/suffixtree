@@ -31,11 +31,27 @@ In addition to those Strings, there are a set of different strings that are impl
 
 This kind of "implicit path" is important in the testAndSplit method.
 
+## Benchmarking
+
+The project includes a JMH (Java Microbenchmark Harness) suite to monitor performance and memory allocation, specifically to avoid regressions in Garbage Collection pressure and CPU overhead.
+
+The benchmark is isolated in a Maven profile to keep the main library dependencies clean.
+
+To build the benchmark tool:
+```bash
+mvn clean package -Pbenchmark
+```
+
+To run the benchmark with GC profiling:
+```bash
+java -jar target/benchmarks.jar -prof gc
+```
+
 ## License
 
 This Generalized Suffix Tree is released under the Apache License 2.0
 
-   Copyright 2012 Alessandro Bahgat Shehata
+   Copyright 2012-2026 Alessandro Bahgat Shehata
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
