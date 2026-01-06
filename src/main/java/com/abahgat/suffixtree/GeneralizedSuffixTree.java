@@ -182,8 +182,6 @@ public class GeneralizedSuffixTree {
         for (int i = 0; i < remainder.length(); i++) {
             // line 6
             text += remainder.charAt(i);
-            // use intern to make sure the resulting string is in the pool.
-            text = text.intern();
 
             // line 7: update the tree with the new transitions due to this new char
             Pair<Node, String> active = update(s, text, remainder.substring(i), index);
@@ -385,7 +383,7 @@ public class GeneralizedSuffixTree {
                 Pair<Node, String> canret = canonize(s.getSuffix(), safeCutLastChar(tempstr));
                 s = canret.getFirst();
                 // use intern to ensure that tempstr is a reference from the string pool
-                tempstr = (canret.getSecond() + tempstr.charAt(tempstr.length() - 1)).intern();
+                tempstr = (canret.getSecond() + tempstr.charAt(tempstr.length() - 1));
             }
 
             // line 7
