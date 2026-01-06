@@ -243,21 +243,108 @@ public class SuffixTreeTest extends TestCase {
         assertEmpty(tree.search("さ")); // 'sa', not in word
     }
 
-    public void testSupplementaryCharacters() {
-        GeneralizedSuffixTree tree = new GeneralizedSuffixTree();
-        // "😀😁😂" (Grinning Face, Beaming Face with Smiling Eyes, Face with Tears of Joy)
-        String word = "😀😁😂"; 
-        tree.put(word, 1);
-        
-        Collection<Integer> result = tree.search("😁");
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertTrue(result.contains(1));
-        
-        result = tree.search("😂");
-        assertTrue(result.contains(1));
-        
-        assertEmpty(tree.search("🤣")); // ROFL, not in word
-    }
+        public void testSupplementaryCharacters() {
 
-}
+            GeneralizedSuffixTree tree = new GeneralizedSuffixTree();
+
+            // "😀😁😂" (Grinning Face, Beaming Face with Smiling Eyes, Face with Tears of Joy)
+
+            String word = "😀😁😂"; 
+
+            tree.put(word, 1);
+
+            
+
+            Collection<Integer> result = tree.search("😁");
+
+            assertNotNull(result);
+
+            assertEquals(1, result.size());
+
+            assertTrue(result.contains(1));
+
+            
+
+            result = tree.search("😂");
+
+            assertTrue(result.contains(1));
+
+            
+
+            assertEmpty(tree.search("🤣")); // ROFL, not in word
+
+        }
+
+    
+
+        public void testSimplestPossibleSample() {
+
+            GeneralizedSuffixTree suffixTree = new GeneralizedSuffixTree();
+
+            suffixTree.put("a", 0);
+
+            suffixTree.put("ab", 1);
+
+    
+
+            assertEquals(2, suffixTree.search("a").size());
+
+            assertEquals(1, suffixTree.search("b").size());
+
+        }
+
+    
+
+        private static final String[] TEST_TERM_LIST = {
+
+                "tablett",
+
+                "fleischtablett",
+
+                "salz",
+
+                "pfeffer",
+
+                "kämpft",
+
+                "grünen",
+
+        };
+
+    
+
+        public void testSubstringToTermMatching() {
+
+            GeneralizedSuffixTree suffixTree = new GeneralizedSuffixTree();
+
+    
+
+        /*
+
+         * Add in some terms that we know are used in parts descriptions
+
+         * and that we might like to search by substring
+
+         */
+
+            for (int index = 0; index < TEST_TERM_LIST.length; index++) {
+
+                suffixTree.put(TEST_TERM_LIST[index], index);
+
+            }
+
+    
+
+            assertEquals(2, suffixTree.search("tablett").size());
+
+            assertEquals(2, suffixTree.search("blet").size());
+
+            assertEquals(1, suffixTree.search("feff").size());
+
+            assertEquals(1, suffixTree.search("ün").size());
+
+            assertEquals(1, suffixTree.search("äm").size());
+
+        }
+
+    }

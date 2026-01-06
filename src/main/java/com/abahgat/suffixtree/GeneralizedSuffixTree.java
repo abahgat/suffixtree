@@ -238,14 +238,13 @@ public class GeneralizedSuffixTree {
         if (!"".equals(str)) {
             Edge g = s.getEdge(str.codePointAt(0));
 
-            if (g == null) {
-                // If there's no edge for the first char of "str", it's a mismatch.
-                // However, "str" came from canonize(), which implies we followed a valid path.
-                // If canonize returned a "str" that doesn't have an outgoing edge from "s",
-                // something is unexpected. But if we just need to return mismatch:
-                return new Pair<>(false, s);
-            }
-
+                        // After canonize, 'str' is the remainder of the string that could not be
+                        // traversed by following a full edge. We get the edge for the first
+                        // character of 'str'. If this edge doesn't exist, it means we have a
+                        // mismatch and a new edge needs to be created. Return false to signal this.
+                        if (g == null) {
+                            return new Pair<>(false, s);
+                        }
             String label = g.getLabel();
             // must see whether "str" is substring of the label of an edge
             if (label.length() > str.length() && label.codePointAt(str.length()) == t) {
