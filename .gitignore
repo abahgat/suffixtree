@@ -3,3 +3,6 @@
 *.iws
 target
 .idea
+.classpath
+.project
+.settings/
