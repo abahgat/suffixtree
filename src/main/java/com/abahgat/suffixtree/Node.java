@@ -100,7 +100,7 @@ class Node {
      * @return the first <tt>numElements</tt> associated to this node and children
      */
     Collection<Integer> getData(int numElements) {
-        Set<Integer> ret = new HashSet<Integer>();
+        Set<Integer> ret = new HashSet<>();
         for (int num : data) {
             ret.add(num);
             if (ret.size() == numElements) {
@@ -184,7 +184,7 @@ class Node {
     }
 
     private Set<Integer> computeAndCacheCountRecursive() {
-        Set<Integer> ret = new HashSet<Integer>();
+        Set<Integer> ret = new HashSet<>();
         for (int num : data) {
             ret.add(num);
         }

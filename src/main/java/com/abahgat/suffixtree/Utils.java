@@ -46,7 +46,7 @@ public class Utils {
      * @return the set of all possible substrings of str
      */
     public static Set<String> getSubstrings(String str) {
-        Set<String> ret = new HashSet<String>();
+        Set<String> ret = new HashSet<>();
         // compute all substrings
         for (int len = 1; len <= str.length(); ++len) {
             for (int start = 0; start + len <= str.length(); ++start) {

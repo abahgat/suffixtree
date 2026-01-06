@@ -90,7 +90,7 @@ public class GeneralizedSuffixTree {
     public Collection<Integer> search(String word, int results) {
         Node tmpNode = searchNode(word);
         if (tmpNode == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         return tmpNode.getData(results);
     }
@@ -106,7 +106,7 @@ public class GeneralizedSuffixTree {
     public ResultInfo searchWithCount(String word, int to) {
         Node tmpNode = searchNode(word);
         if (tmpNode == null) {
-            return new ResultInfo(Collections.EMPTY_LIST, 0);
+            return new ResultInfo(Collections.emptyList(), 0);
         }
 
         return new ResultInfo(tmpNode.getData(to), tmpNode.getResultCount());
@@ -231,7 +231,7 @@ public class GeneralizedSuffixTree {
             String label = g.getLabel();
             // must see whether "str" is substring of the label of an edge
             if (label.length() > str.length() && label.charAt(str.length()) == t) {
-                return new Pair<Boolean, Node>(true, s);
+                return new Pair<>(true, s);
             } else {
                 // need to split the edge
                 String newlabel = label.substring(str.length());
@@ -248,21 +248,21 @@ public class GeneralizedSuffixTree {
                 r.addEdge(newlabel.charAt(0), g);
                 s.addEdge(str.charAt(0), newedge);
 
-                return new Pair<Boolean, Node>(false, r);
+                return new Pair<>(false, r);
             }
 
         } else {
             Edge e = s.getEdge(t);
             if (null == e) {
                 // if there is no t-transtion from s
-                return new Pair<Boolean, Node>(false, s);
+                return new Pair<>(false, s);
             } else {
                 if (remainder.equals(e.getLabel())) {
                     // update payload of destination node
                     e.getDest().addRef(value);
-                    return new Pair<Boolean, Node>(true, s);
+                    return new Pair<>(true, s);
                 } else if (remainder.startsWith(e.getLabel())) {
-                    return new Pair<Boolean, Node>(true, s);
+                    return new Pair<>(true, s);
                 } else if (e.getLabel().startsWith(remainder)) {
                     // need to split as above
                     Node newNode = new Node();
@@ -276,10 +276,10 @@ public class GeneralizedSuffixTree {
 
                     s.addEdge(t, newEdge);
 
-                    return new Pair<Boolean, Node>(false, s);
+                    return new Pair<>(false, s);
                 } else {
                     // they are different words. No prefix. but they may still share some common substr
-                    return new Pair<Boolean, Node>(true, s);
+                    return new Pair<>(true, s);
                 }
             }
         }
@@ -295,7 +295,7 @@ public class GeneralizedSuffixTree {
     private Pair<Node, String> canonize(final Node s, final String inputstr) {
 
         if ("".equals(inputstr)) {
-            return new Pair<Node, String>(s, inputstr);
+            return new Pair<>(s, inputstr);
         } else {
             Node currentNode = s;
             String str = inputstr;
@@ -309,7 +309,7 @@ public class GeneralizedSuffixTree {
                 }
             }
 
-            return new Pair<Node, String>(currentNode, str);
+            return new Pair<>(currentNode, str);
         }
     }
 
@@ -399,7 +399,7 @@ public class GeneralizedSuffixTree {
         }
         oldroot = root;
 
-        return new Pair<Node, String>(s, tempstr);
+        return new Pair<>(s, tempstr);
     }
 
     Node getRoot() {

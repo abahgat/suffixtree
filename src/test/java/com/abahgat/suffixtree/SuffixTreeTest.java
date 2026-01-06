@@ -217,7 +217,7 @@ public class SuffixTreeTest extends TestCase {
 
     /* testing a test method :) */
     public void testGetSubstrings() {
-        Collection<String> exp = new HashSet<String>();
+        Collection<String> exp = new HashSet<>();
         exp.addAll(Arrays.asList(new String[] {"w", "r", "d", "wr", "rd", "wrd"}));
         Collection<String> ret = getSubstrings("wrd");
         assertTrue(ret.equals(exp));
