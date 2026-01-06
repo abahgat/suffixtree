@@ -51,15 +51,18 @@ public class EdgeBagTest {
         Edge e2 = new Edge("errimo", null);
         Edge e3 = new Edge("foo", null);
         Edge e4 = new Edge("bar", null);
-        bag.put('a', e1);
-        bag.put('e', e2);
-        bag.put('f', e3);
-        bag.put('b', e4);
-        assertTrue("Bag contains " + bag.values().size() + " elements", bag.values().size() == 4);
+        Edge e5 = new Edge( "\u540d\u79f0", null);
+        bag.put((int) 'a', e1);
+        bag.put((int) 'e', e2);
+        bag.put((int) 'f', e3);
+        bag.put((int) 'b', e4);
+        bag.put(0x540d, e5);
+        assertTrue("Bag contains " + bag.values().size() + " elements", bag.values().size() == 5);
         assertTrue(bag.get('a').equals(e1));
         assertTrue(bag.get('e').equals(e2));
         assertTrue(bag.get('f').equals(e3));
         assertTrue(bag.get('b').equals(e4));
+        assertTrue(bag.get(0x540d).equals(e5));
      }
 
      @Test

@@ -223,4 +223,41 @@ public class SuffixTreeTest extends TestCase {
         assertTrue(ret.equals(exp));
     }
 
+    public void testUnicode() {
+        GeneralizedSuffixTree tree = new GeneralizedSuffixTree();
+        // "こんにちは" means "Hello" in Japanese
+        String word = "こんにちは"; 
+        tree.put(word, 1);
+        
+        Collection<Integer> result = tree.search("んに");
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertTrue(result.contains(1));
+        
+        result = tree.search("に");
+        assertTrue(result.contains(1));
+        
+        result = tree.search("は");
+        assertTrue(result.contains(1));
+        
+        assertEmpty(tree.search("さ")); // 'sa', not in word
+    }
+
+    public void testSupplementaryCharacters() {
+        GeneralizedSuffixTree tree = new GeneralizedSuffixTree();
+        // "😀😁😂" (Grinning Face, Beaming Face with Smiling Eyes, Face with Tears of Joy)
+        String word = "😀😁😂"; 
+        tree.put(word, 1);
+        
+        Collection<Integer> result = tree.search("😁");
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertTrue(result.contains(1));
+        
+        result = tree.search("😂");
+        assertTrue(result.contains(1));
+        
+        assertEmpty(tree.search("🤣")); // ROFL, not in word
+    }
+
 }

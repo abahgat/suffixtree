@@ -25,34 +25,31 @@ import java.util.Set;
  * arrays to keep minimize the memory footprint.
  * Implements only the operations that are needed within the suffix tree context.
  */
-class EdgeBag implements Map<Character, Edge> {
-    private byte[] chars;
+class EdgeBag implements Map<Integer, Edge> {
+    private int[] codePoints;
     private Edge[] values;
     private static final int BSEARCH_THRESHOLD = 6;
 
     @Override
-    public Edge put(Character character, Edge e) {
-        char c = character.charValue();
-        if (c != (char) (byte) c) {
-            throw new IllegalArgumentException("Illegal input character " + c + ".");
-        }
+    public Edge put(Integer character, Edge e) {
+        int c = character.intValue();
         
-        if (chars == null) {
-            chars = new byte[0];
+        if (codePoints == null) {
+            codePoints = new int[0];
             values = new Edge[0];
         }
         int idx = search(c);
         Edge previous = null;
 
         if (idx < 0) {
-            int currsize = chars.length;
-            byte[] copy = new byte[currsize + 1];
-            System.arraycopy(chars, 0, copy, 0, currsize);
-            chars = copy;
+            int currsize = codePoints.length;
+            int[] copy = new int[currsize + 1];
+            System.arraycopy(codePoints, 0, copy, 0, currsize);
+            codePoints = copy;
             Edge[] copy1 = new Edge[currsize + 1];
             System.arraycopy(values, 0, copy1, 0, currsize);
             values = copy1;
-            chars[currsize] = (byte) c;
+            codePoints[currsize] = c;
             values[currsize] = e;
             currsize++;
             if (currsize > BSEARCH_THRESHOLD) {
@@ -67,14 +64,10 @@ class EdgeBag implements Map<Character, Edge> {
     
     @Override
     public Edge get(Object maybeCharacter) {
-        return get(((Character) maybeCharacter).charValue());  // throws if cast fails.
+        return get(((Integer) maybeCharacter).intValue());  // throws if cast fails.
     }
 
-    public Edge get(char c) {
-        if (c != (char) (byte) c) {
-            throw new IllegalArgumentException("Illegal input character " + c + ".");
-        }
-        
+    public Edge get(int c) {
         int idx = search(c);
         if (idx < 0) {
             return null;
@@ -82,16 +75,16 @@ class EdgeBag implements Map<Character, Edge> {
         return values[idx];
     }
 
-    private int search(char c) {
-        if (chars == null)
+    private int search(int c) {
+        if (codePoints == null)
             return -1;
         
-        if (chars.length > BSEARCH_THRESHOLD) {
-            return java.util.Arrays.binarySearch(chars, (byte) c);
+        if (codePoints.length > BSEARCH_THRESHOLD) {
+            return java.util.Arrays.binarySearch(codePoints, c);
         }
 
-        for (int i = 0; i < chars.length; i++) {
-            if (c == chars[i]) {
+        for (int i = 0; i < codePoints.length; i++) {
+            if (c == codePoints[i]) {
                 return i;
             }
         }
@@ -104,17 +97,17 @@ class EdgeBag implements Map<Character, Edge> {
     }
     
     /**
-     * A trivial implementation of sort, used to sort chars[] and values[] according to the data in chars.
+     * A trivial implementation of sort, used to sort codePoints[] and values[] according to the data in codePoints.
      * 
      * It was preferred to faster sorts (like qsort) because of the small sizes (<=36) of the collections involved.
      */
     private void sortArrays() {
-        for (int i = 0; i < chars.length; i++) {
+        for (int i = 0; i < codePoints.length; i++) {
          for (int j = i; j > 0; j--) {
-            if (chars[j-1] > chars[j]) {
-               byte swap = chars[j];
-               chars[j] = chars[j-1];
-               chars[j-1] = swap;
+            if (codePoints[j-1] > codePoints[j]) {
+               int swap = codePoints[j];
+               codePoints[j] = codePoints[j-1];
+               codePoints[j-1] = swap;
 
                Edge swapEdge = values[j];
                values[j] = values[j-1];
@@ -126,21 +119,21 @@ class EdgeBag implements Map<Character, Edge> {
     
     @Override
     public boolean isEmpty() {
-        return chars == null || chars.length == 0;
+        return codePoints == null || codePoints.length == 0;
     }
     
     @Override
     public int size() {
-        return chars == null ? 0 : chars.length;
+        return codePoints == null ? 0 : codePoints.length;
     }
     
     @Override
-    public Set<Map.Entry<Character, Edge>> entrySet() {
+    public Set<Map.Entry<Integer, Edge>> entrySet() {
         throw new UnsupportedOperationException("Not implemented");
     }
     
     @Override
-    public Set<Character> keySet() {
+    public Set<Integer> keySet() {
         throw new UnsupportedOperationException("Not implemented");
     }
     
@@ -150,7 +143,7 @@ class EdgeBag implements Map<Character, Edge> {
     }
     
     @Override
-    public void putAll(Map<? extends Character, ? extends Edge> m) {
+    public void putAll(Map<? extends Integer, ? extends Edge> m) {
         throw new UnsupportedOperationException("Not implemented");
     }
     

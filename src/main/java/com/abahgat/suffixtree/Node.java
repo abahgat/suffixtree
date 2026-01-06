@@ -56,7 +56,7 @@ class Node {
     /**
      * The set of edges starting from this node
      */
-    private final Map<Character, Edge> edges;
+    private final Map<Integer, Edge> edges;
     /**
      * The suffix link as described in Ukkonen's paper.
      * if str is the string denoted by the path from the root to this, this.suffix
@@ -217,15 +217,15 @@ class Node {
         return resultCount;
     }
 
-    void addEdge(char ch, Edge e) {
+    void addEdge(int ch, Edge e) {
         edges.put(ch, e);
     }
 
-    Edge getEdge(char ch) {
+    Edge getEdge(int ch) {
         return edges.get(ch);
     }
 
-    Map<Character, Edge> getEdges() {
+    Map<Integer, Edge> getEdges() {
         return edges;
     }
 

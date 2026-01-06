@@ -41,16 +41,23 @@ public class Utils {
     /**
      * Computes the set of all the substrings contained within the <tt>str</tt>
      * 
-     * It is fairly inefficient, but it is used just in tests ;)
+     * It is fairly expensive as it computes all the possible substrings.
+     * 
      * @param str the string to compute substrings of
      * @return the set of all possible substrings of str
      */
     public static Set<String> getSubstrings(String str) {
         Set<String> ret = new HashSet<>();
+        if (str.length() == 0) {
+            return java.util.Collections.emptySet();
+        }
+
+        int[] codePoints = str.codePoints().toArray();
+
         // compute all substrings
-        for (int len = 1; len <= str.length(); ++len) {
-            for (int start = 0; start + len <= str.length(); ++start) {
-                String itstr = str.substring(start, start + len);
+        for (int len = 1; len <= codePoints.length; ++len) {
+            for (int start = 0; start + len <= codePoints.length; ++start) {
+                String itstr = new String(codePoints, start, len);
                 ret.add(itstr);
             }
         }
