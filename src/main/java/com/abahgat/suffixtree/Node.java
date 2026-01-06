@@ -101,7 +101,8 @@ class Node {
      */
     Collection<Integer> getData(int numElements) {
         Set<Integer> ret = new HashSet<>();
-        for (int num : data) {
+        for (int idx = 0; idx < lastIdx; idx++) {
+            int num = data[idx];
             ret.add(num);
             if (ret.size() == numElements) {
                 return ret;
@@ -118,6 +119,23 @@ class Node {
                 }
             }
         }
+        return ret;
+    }
+
+...
+
+    private Set<Integer> computeAndCacheCountRecursive() {
+        Set<Integer> ret = new HashSet<>();
+        for (int idx = 0; idx < lastIdx; idx++) {
+            ret.add(data[idx]);
+        }
+        for (Edge e : edges.values()) {
+            for (int num : e.getDest().computeAndCacheCountRecursive()) {
+                ret.add(num);
+            }
+        }
+
+        resultCount = ret.size();
         return ret;
     }
 
