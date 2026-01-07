@@ -1,5 +1,5 @@
 # Generalized Suffix Tree
-[![Build Status](https://travis-ci.org/abahgat/suffixtree.png?branch=master)](https://travis-ci.org/abahgat/suffixtree)
+![Java CI with Maven](https://github.com/abahgat/suffixtree/actions/workflows/maven.yml/badge.svg)
 
 A Generalized Suffix Tree, based on Ukkonen's paper "On-line construction of suffix trees"
 http://www.cs.helsinki.fi/u/ukkonen/SuffixT1withFigs.pdf
