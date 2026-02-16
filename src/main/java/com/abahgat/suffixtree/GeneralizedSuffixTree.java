@@ -132,14 +132,13 @@ public class GeneralizedSuffixTree {
                 // there is no edge starting with this char
                 return null;
             } else {
-                String label = currentEdge.getLabel();
-                int lenToMatch = Math.min(word.length() - i, label.length());
-                if (!word.regionMatches(i, label, 0, lenToMatch)) {
+                int lenToMatch = Math.min(word.length() - i, currentEdge.length());
+                if (!currentEdge.regionMatches(0, word, i, lenToMatch)) {
                     // the label on the edge does not correspond to the one in the string to search
                     return null;
                 }
 
-                if (label.length() >= word.length() - i) {
+                if (currentEdge.length() >= word.length() - i) {
                     return currentEdge.getDest();
                 } else {
                     // advance to next node
@@ -190,7 +189,7 @@ public class GeneralizedSuffixTree {
             text = text.intern();
 
             // line 7: update the tree with the new transitions due to this new char
-            Pair<Node, String> active = update(s, text, key.substring(i), index);
+            Pair<Node, String> active = update(s, text, key, i, index);
             // line 8: make sure the active pair is canonical
             active = canonize(active.getFirst(), active.getSecond());
             
@@ -222,14 +221,15 @@ public class GeneralizedSuffixTree {
      * @param inputs the starting node
      * @param stringPart the string to search
      * @param t the following character
-     * @param remainder the remainder of the string to add to the index
+     * @param input the complete input string
+     * @param index the current index in the input string
      * @param value the value to add to the index
      * @return a pair containing
      *                  true/false depending on whether (stringPart + t) is contained in the subtree starting in inputs
      *                  the last node that can be reached by following the path denoted by stringPart starting from inputs
      *         
      */
-    private Pair<Boolean, Node> testAndSplit(final Node inputs, final String stringPart, final int t, final String remainder, final int value) {
+    private Pair<Boolean, Node> testAndSplit(final Node inputs, final String stringPart, final int t, final String input, final int index, final int value) {
         // descend the tree as far as possible
         Pair<Node, String> ret = canonize(inputs, stringPart);
         Node s = ret.getFirst();
@@ -238,31 +238,28 @@ public class GeneralizedSuffixTree {
         if (!"".equals(str)) {
             Edge g = s.getEdge(str.codePointAt(0));
 
-                        // After canonize, 'str' is the remainder of the string that could not be
-                        // traversed by following a full edge. We get the edge for the first
-                        // character of 'str'. If this edge doesn't exist, it means we have a
-                        // mismatch and a new edge needs to be created. Return false to signal this.
-                        if (g == null) {
-                            return new Pair<>(false, s);
-                        }
-            String label = g.getLabel();
+            // After canonize, 'str' is the remainder of the string that could not be
+            // traversed by following a full edge. We get the edge for the first
+            // character of 'str'. If this edge doesn't exist, it means we have a
+            // mismatch and a new edge needs to be created. Return false to signal this.
+            if (g == null) {
+                return new Pair<>(false, s);
+            }
             // must see whether "str" is substring of the label of an edge
-            if (label.length() > str.length() && label.codePointAt(str.length()) == t) {
+            if (g.length() > str.length() && g.codePointAt(str.length()) == t) {
                 return new Pair<>(true, s);
             } else {
                 // need to split the edge
-                String newlabel = label.substring(str.length());
-                assert (label.startsWith(str));
-
+                
                 // build a new node
                 Node r = new Node();
                 // build a new edge
                 Edge newedge = new Edge(str, r);
 
-                g.setLabel(newlabel);
+                g.setLabel(g.getSource(), g.getStart() + str.length(), g.getEnd());
 
                 // link s -> r
-                r.addEdge(newlabel.codePointAt(0), g);
+                r.addEdge(g.codePointAt(0), g);
                 s.addEdge(str.codePointAt(0), newedge);
 
                 return new Pair<>(false, r);
@@ -274,22 +271,24 @@ public class GeneralizedSuffixTree {
                 // if there is no t-transtion from s
                 return new Pair<>(false, s);
             } else {
-                if (remainder.equals(e.getLabel())) {
+                int remainderLength = input.length() - index;
+                
+                if (remainderLength == e.length() && e.regionMatches(0, input, index, remainderLength)) {
                     // update payload of destination node
                     e.getDest().addRef(value);
                     return new Pair<>(true, s);
-                } else if (remainder.startsWith(e.getLabel())) {
+                } else if (remainderLength > e.length() && e.regionMatches(0, input, index, e.length())) {
                     return new Pair<>(true, s);
-                } else if (e.getLabel().startsWith(remainder)) {
+                } else if (e.length() > remainderLength && e.regionMatches(0, input, index, remainderLength)) {
                     // need to split as above
                     Node newNode = new Node();
                     newNode.addRef(value);
 
-                    Edge newEdge = new Edge(remainder, newNode);
+                    Edge newEdge = new Edge(input, index, input.length(), newNode);
 
-                    e.setLabel(e.getLabel().substring(remainder.length()));
+                    e.setLabel(e.getSource(), e.getStart() + remainderLength, e.getEnd());
 
-                    newNode.addEdge(e.getLabel().codePointAt(0), e);
+                    newNode.addEdge(e.codePointAt(0), e);
 
                     s.addEdge(t, newEdge);
 
@@ -315,18 +314,21 @@ public class GeneralizedSuffixTree {
             return new Pair<>(s, inputstr);
         } else {
             Node currentNode = s;
-            String str = inputstr;
-            Edge g = s.getEdge(str.codePointAt(0));
+            int idx = 0;
+            Edge g = s.getEdge(inputstr.codePointAt(idx));
+            
             // descend the tree as long as a proper label is found
-            while (g != null && str.startsWith(g.getLabel())) {
-                str = str.substring(g.getLabel().length());
+            while (g != null && (inputstr.length() - idx) >= g.length()) {
+                idx += g.length();
                 currentNode = g.getDest();
-                if (str.length() > 0) {
-                    g = currentNode.getEdge(str.codePointAt(0));
+                if (idx < inputstr.length()) {
+                    g = currentNode.getEdge(inputstr.codePointAt(idx));
+                } else {
+                    g = null;
                 }
             }
 
-            return new Pair<>(currentNode, str);
+            return new Pair<>(currentNode, inputstr.substring(idx));
         }
     }
 
@@ -343,10 +345,11 @@ public class GeneralizedSuffixTree {
      * 
      * @param inputNode the node to start from
      * @param stringPart the string to add to the tree
-     * @param rest the rest of the string
+     * @param input the complete input string
+     * @param index the current index in the input string
      * @param value the value to add to the index
      */
-    private Pair<Node, String> update(final Node inputNode, final String stringPart, final String rest, final int value) {
+    private Pair<Node, String> update(final Node inputNode, final String stringPart, final String input, final int index, final int value) {
         Node s = inputNode;
         String tempstr = stringPart;
         int newChar = stringPart.codePointBefore(stringPart.length());
@@ -355,7 +358,7 @@ public class GeneralizedSuffixTree {
         Node oldroot = root;
 
         // line 1b
-        Pair<Boolean, Node> ret = testAndSplit(s, stringPart.substring(0, stringPart.length() - Character.charCount(newChar)), newChar, rest, value);
+        Pair<Boolean, Node> ret = testAndSplit(s, stringPart.substring(0, stringPart.length() - Character.charCount(newChar)), newChar, input, index, value);
 
         Node r = ret.getSecond();
         boolean endpoint = ret.getFirst();
@@ -373,7 +376,7 @@ public class GeneralizedSuffixTree {
                 // must build a new leaf
                 leaf = new Node();
                 leaf.addRef(value);
-                Edge newedge = new Edge(rest, leaf);
+                Edge newedge = new Edge(input, index, input.length(), leaf);
                 r.addEdge(newChar, newedge);
             }
 
@@ -407,7 +410,7 @@ public class GeneralizedSuffixTree {
             }
 
             // line 7
-            ret = testAndSplit(s, safeCutLastChar(tempstr), newChar, rest, value);
+            ret = testAndSplit(s, safeCutLastChar(tempstr), newChar, input, index, value);
             r = ret.getSecond();
             endpoint = ret.getFirst();
 

@@ -20,15 +20,25 @@ package com.abahgat.suffixtree;
  * It has a label and a destination Node
  */
 class Edge {
-    private String label;
+    private String source;
+    private int start;
+    private int end;
     private Node dest;
 
     public String getLabel() {
-        return label;
+        return source.substring(start, end);
     }
 
     public void setLabel(String label) {
-        this.label = label;
+        this.source = label;
+        this.start = 0;
+        this.end = label.length();
+    }
+    
+    public void setLabel(String source, int start, int end) {
+        this.source = source;
+        this.start = start;
+        this.end = end;
     }
 
     public Node getDest() {
@@ -40,8 +50,44 @@ class Edge {
     }
 
     public Edge(String label, Node dest) {
-        this.label = label;
+        this.source = label;
+        this.start = 0;
+        this.end = label.length();
         this.dest = dest;
     }
+    
+    public Edge(String source, int start, int end, Node dest) {
+        this.source = source;
+        this.start = start;
+        this.end = end;
+        this.dest = dest;
+    }
+    
+    public int length() {
+        return end - start;
+    }
+    
+    public int codePointAt(int index) {
+        return source.codePointAt(start + index);
+    }
+    
+    public int getStart() {
+        return start;
+    }
+    
+    public int getEnd() {
+        return end;
+    }
+    
+    public String getSource() {
+        return source;
+    }
 
+    public boolean regionMatches(int toffset, String other, int ooffset, int len) {
+        return source.regionMatches(start + toffset, other, ooffset, len);
+    }
+    
+    public boolean startsWith(String prefix) {
+        return source.regionMatches(start, prefix, 0, prefix.length());
+    }
 }
