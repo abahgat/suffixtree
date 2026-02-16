@@ -284,8 +284,9 @@ class Node {
      *     objects.
      * </p>
      * <p>
-     *     By increasing the payload array size by a fixed amount each time, we can greatly increase
-     *     the speed of construction.
+     *     We use geometric expansion (doubling the size) instead of arithmetic expansion.
+     *     This ensures that the amortized cost of inserting an element is O(1), leading to O(N)
+     *     total construction time for N elements. Arithmetic expansion would lead to O(N^2).
      * </p>
      * <p>
      *     To recover unused space, the {@link #compact} method can be called to once construction
@@ -295,9 +296,9 @@ class Node {
      * @return
      */
     private int increment(int currentLength) {
-        if (currentLength >= DOUBLE_INCREMENT_THRESHOLD) {
-            return 2 * INCREMENT;
+        if (currentLength == 0) {
+            return START_SIZE > 0 ? START_SIZE : INCREMENT;
         }
-        return INCREMENT;
+        return currentLength; // Double the size (geometric expansion) for O(N) amortized time
     }
 }

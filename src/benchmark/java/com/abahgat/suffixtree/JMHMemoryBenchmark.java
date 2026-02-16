@@ -24,11 +24,15 @@ import org.openjdk.jmh.annotations.Warmup;
 @Fork(1)
 public class JMHMemoryBenchmark {
 
-    @Param({"100000"})
+
+    @Param({"100000", "500000"})
     public int wordCount;
 
     @Param({"10"})
     public int wordLength;
+
+    @Param({"random", "repeated"})
+    public String dataset;
 
     private String[] words;
 
@@ -37,7 +41,11 @@ public class JMHMemoryBenchmark {
         words = new String[wordCount];
         Random random = new Random(1234);
         for (int i = 0; i < wordCount; i++) {
-            words[i] = generateRandomWord(wordLength, random);
+            if ("random".equals(dataset)) {
+                words[i] = generateRandomWord(wordLength, random);
+            } else {
+                words[i] = generateRepeatedWord(wordLength, "a");
+            }
         }
     }
 
@@ -54,6 +62,14 @@ public class JMHMemoryBenchmark {
         StringBuilder word = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
             word.append((char) ('a' + random.nextInt(26)));
+        }
+        return word.toString();
+    }
+
+    private static String generateRepeatedWord(int length, String pattern) {
+        StringBuilder word = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            word.append(pattern);
         }
         return word.toString();
     }
