@@ -24,14 +24,13 @@ import org.openjdk.jmh.annotations.Warmup;
 @Fork(1)
 public class JMHMemoryBenchmark {
 
-
-    @Param({"100000", "500000"})
+    @Param({ "100000", "500000" })
     public int wordCount;
 
-    @Param({"10"})
+    @Param({ "10" })
     public int wordLength;
 
-    @Param({"random", "repeated"})
+    @Param({ "random", "repeated" })
     public String dataset;
 
     private String[] words;

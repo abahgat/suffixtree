@@ -18,15 +18,20 @@ package com.abahgat.suffixtree;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import junit.framework.TestCase;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static com.abahgat.suffixtree.Utils.getSubstrings;
 
-public class SuffixTreeTest extends TestCase {
+public class SuffixTreeTest {
 
     public static <E> void assertEmpty(Collection<E> collection) {
-        assertTrue("Expected empty collection.", collection.isEmpty());
+        assertTrue(collection.isEmpty(), () -> "Expected empty collection.");
     }
 
+    @Test
     public void testBasicTreeGeneration() {
         GeneralizedSuffixTree in = new GeneralizedSuffixTree();
 
@@ -52,6 +57,7 @@ public class SuffixTreeTest extends TestCase {
         assertEmpty(in.search("ookepr"));
     }
 
+    @Test
     public void testWeirdword() {
         GeneralizedSuffixTree in = new GeneralizedSuffixTree();
 
@@ -64,6 +70,7 @@ public class SuffixTreeTest extends TestCase {
         }
     }
 
+    @Test
     public void testDouble() {
         // test whether the tree can handle repetitions
         GeneralizedSuffixTree in = new GeneralizedSuffixTree();
@@ -77,16 +84,19 @@ public class SuffixTreeTest extends TestCase {
         }
     }
 
+    @Test
     public void testBananaAddition() {
         GeneralizedSuffixTree in = new GeneralizedSuffixTree();
-        String[] words = new String[] {"banana", "bano", "ba"};
+        String[] words = new String[] { "banana", "bano", "ba" };
         for (int i = 0; i < words.length; ++i) {
             in.put(words[i], i);
+            final int index = i;
+            final String word = words[i];
 
             for (String s : getSubstrings(words[i])) {
                 Collection<Integer> result = in.search(s);
-                assertNotNull("result null for string " + s + " after adding " + words[i], result);
-                assertTrue("substring " + s + " not found after adding " + words[i], result.contains(i));
+                assertNotNull(result, () -> "result null for string " + s + " after adding " + word);
+                assertTrue(result.contains(index), () -> "substring " + s + " not found after adding " + word);
             }
 
         }
@@ -109,24 +119,29 @@ public class SuffixTreeTest extends TestCase {
 
     }
 
+    @Test
     public void testAddition() {
         GeneralizedSuffixTree in = new GeneralizedSuffixTree();
-        String[] words = new String[] {"cacaor" , "caricato", "cacato", "cacata", "caricata", "cacao", "banana"};
+        String[] words = new String[] { "cacaor", "caricato", "cacato", "cacata", "caricata", "cacao", "banana" };
         for (int i = 0; i < words.length; ++i) {
             in.put(words[i], i);
+            final int index = i;
+            final String word = words[i];
 
             for (String s : getSubstrings(words[i])) {
                 Collection<Integer> result = in.search(s);
-                assertNotNull("result null for string " + s + " after adding " + words[i], result);
-                assertTrue("substring " + s + " not found after adding " + words[i], result.contains(i));
+                assertNotNull(result, () -> "result null for string " + s + " after adding " + word);
+                assertTrue(result.contains(index), () -> "substring " + s + " not found after adding " + word);
             }
         }
         // verify post-addition
         for (int i = 0; i < words.length; ++i) {
+            final int index = i;
+            final String word = words[i];
             for (String s : getSubstrings(words[i])) {
                 Collection<Integer> result = in.search(s);
-                assertNotNull("result null for string " + s + " after adding " + words[i], result);
-                assertTrue("substring " + s + " not found after adding " + words[i], result.contains(i));
+                assertNotNull(result, () -> "result null for string " + s + " after adding " + word);
+                assertTrue(result.contains(index), () -> "substring " + s + " not found after adding " + word);
             }
         }
 
@@ -138,52 +153,54 @@ public class SuffixTreeTest extends TestCase {
                 assertTrue(in.search(s).contains(i + words.length));
             }
         }
-        
+
         in.computeCount();
         testResultsCount(in.getRoot());
 
         assertEmpty(in.search("aoca"));
     }
 
+    @Test
     public void testSampleAddition() {
         GeneralizedSuffixTree in = new GeneralizedSuffixTree();
-        String[] words = new String[] {"libertypike",
-            "franklintn",
-            "carothersjohnhenryhouse",
-            "carothersezealhouse",
-            "acrossthetauntonriverfromdightonindightonrockstatepark",
-            "dightonma",
-            "dightonrock",
-            "6mineoflowgaponlowgapfork",
-            "lowgapky",
-            "lemasterjohnjandellenhouse",
-            "lemasterhouse",
-            "70wilburblvd",
-            "poughkeepsieny",
-            "freerhouse",
-            "701laurelst",
-            "conwaysc",
-            "hollidayjwjrhouse",
-            "mainandappletonsts",
-            "menomoneefallswi",
-            "mainstreethistoricdistrict",
-            "addressrestricted",
-            "brownsmillsnj",
-            "hanoverfurnace",
-            "hanoverbogironfurnace",
-            "sofsavannahatfergusonaveandbethesdard",
-            "savannahga",
-            "bethesdahomeforboys",
-            "bethesda"};
+        String[] words = new String[] { "libertypike",
+                "franklintn",
+                "carothersjohnhenryhouse",
+                "carothersezealhouse",
+                "acrossthetauntonriverfromdightonindightonrockstatepark",
+                "dightonma",
+                "dightonrock",
+                "6mineoflowgaponlowgapfork",
+                "lowgapky",
+                "lemasterjohnjandellenhouse",
+                "lemasterhouse",
+                "70wilburblvd",
+                "poughkeepsieny",
+                "freerhouse",
+                "701laurelst",
+                "conwaysc",
+                "hollidayjwjrhouse",
+                "mainandappletonsts",
+                "menomoneefallswi",
+                "mainstreethistoricdistrict",
+                "addressrestricted",
+                "brownsmillsnj",
+                "hanoverfurnace",
+                "hanoverbogironfurnace",
+                "sofsavannahatfergusonaveandbethesdard",
+                "savannahga",
+                "bethesdahomeforboys",
+                "bethesda" };
         for (int i = 0; i < words.length; ++i) {
             in.put(words[i], i);
+            final int index = i;
+            final String word = words[i];
 
             for (String s : getSubstrings(words[i])) {
                 Collection<Integer> result = in.search(s);
-                assertNotNull("result null for string " + s + " after adding " + words[i], result);
-                assertTrue("substring " + s + " not found after adding " + words[i], result.contains(i));
+                assertNotNull(result, () -> "result null for string " + s + " after adding " + word);
+                assertTrue(result.contains(index), () -> "substring " + s + " not found after adding " + word);
             }
-
 
         }
         // verify post-addition
@@ -216,135 +233,95 @@ public class SuffixTreeTest extends TestCase {
     }
 
     /* testing a test method :) */
+    @Test
     public void testGetSubstrings() {
-        Collection<String> exp = new HashSet<>();
-        exp.addAll(Arrays.asList(new String[] {"w", "r", "d", "wr", "rd", "wrd"}));
+        var exp = Set.of("w", "r", "d", "wr", "rd", "wrd");
         Collection<String> ret = getSubstrings("wrd");
         assertTrue(ret.equals(exp));
     }
 
+    @Test
     public void testUnicode() {
         GeneralizedSuffixTree tree = new GeneralizedSuffixTree();
         // "こんにちは" means "Hello" in Japanese
-        String word = "こんにちは"; 
+        String word = "こんにちは";
         tree.put(word, 1);
-        
+
         Collection<Integer> result = tree.search("んに");
         assertNotNull(result);
         assertEquals(1, result.size());
         assertTrue(result.contains(1));
-        
+
         result = tree.search("に");
         assertTrue(result.contains(1));
-        
+
         result = tree.search("は");
         assertTrue(result.contains(1));
-        
+
         assertEmpty(tree.search("さ")); // 'sa', not in word
     }
 
-        public void testSupplementaryCharacters() {
+    @Test
+    public void testSupplementaryCharacters() {
 
-            GeneralizedSuffixTree tree = new GeneralizedSuffixTree();
+        GeneralizedSuffixTree tree = new GeneralizedSuffixTree();
 
-            // "😀😁😂" (Grinning Face, Beaming Face with Smiling Eyes, Face with Tears of Joy)
+        // "😀😁😂" (Grinning Face, Beaming Face with Smiling Eyes, Face with Tears of
+        // Joy)
 
-            String word = "😀😁😂"; 
+        String word = "😀😁😂";
 
-            tree.put(word, 1);
+        tree.put(word, 1);
 
-            
+        Collection<Integer> result = tree.search("😁");
 
-            Collection<Integer> result = tree.search("😁");
+        assertNotNull(result);
 
-            assertNotNull(result);
+        assertEquals(1, result.size());
 
-            assertEquals(1, result.size());
+        assertTrue(result.contains(1));
 
-            assertTrue(result.contains(1));
+        result = tree.search("😂");
 
-            
+        assertTrue(result.contains(1));
+        assertEmpty(tree.search("🤣")); // ROFL, not in word
+    }
 
-            result = tree.search("😂");
+    @Test
+    public void testSimplestPossibleSample() {
+        GeneralizedSuffixTree suffixTree = new GeneralizedSuffixTree();
+        suffixTree.put("a", 0);
+        suffixTree.put("ab", 1);
 
-            assertTrue(result.contains(1));
+        assertEquals(2, suffixTree.search("a").size());
+        assertEquals(1, suffixTree.search("b").size());
+    }
 
-            
-
-            assertEmpty(tree.search("🤣")); // ROFL, not in word
-
-        }
-
-    
-
-        public void testSimplestPossibleSample() {
-
-            GeneralizedSuffixTree suffixTree = new GeneralizedSuffixTree();
-
-            suffixTree.put("a", 0);
-
-            suffixTree.put("ab", 1);
-
-    
-
-            assertEquals(2, suffixTree.search("a").size());
-
-            assertEquals(1, suffixTree.search("b").size());
-
-        }
-
-    
-
-        private static final String[] TEST_TERM_LIST = {
-
+    @Test
+    public void testSubstringToTermMatching() {
+        GeneralizedSuffixTree suffixTree = new GeneralizedSuffixTree();
+        /*
+         * Add in some terms that we know are used in parts descriptions
+         * and that we might like to search by substring
+         */
+        String[] terms = {
                 "tablett",
-
                 "fleischtablett",
-
                 "salz",
-
                 "pfeffer",
-
                 "kämpft",
-
                 "grünen",
-
         };
 
-    
-
-        public void testSubstringToTermMatching() {
-
-            GeneralizedSuffixTree suffixTree = new GeneralizedSuffixTree();
-
-    
-
-        /*
-
-         * Add in some terms that we know are used in parts descriptions
-
-         * and that we might like to search by substring
-
-         */
-
-            for (int index = 0; index < TEST_TERM_LIST.length; index++) {
-
-                suffixTree.put(TEST_TERM_LIST[index], index);
-
-            }
-
-    
-
-            assertEquals(2, suffixTree.search("tablett").size());
-
-            assertEquals(2, suffixTree.search("blet").size());
-
-            assertEquals(1, suffixTree.search("feff").size());
-
-            assertEquals(1, suffixTree.search("ün").size());
-
-            assertEquals(1, suffixTree.search("äm").size());
-
+        for (int i = 0; i < terms.length; i++) {
+            suffixTree.put(terms[i], i);
         }
 
+        assertEquals(2, suffixTree.search("tablett").size());
+        assertEquals(2, suffixTree.search("blet").size());
+        assertEquals(1, suffixTree.search("feff").size());
+        assertEquals(1, suffixTree.search("ün").size());
+        assertEquals(1, suffixTree.search("äm").size());
     }
+
+}

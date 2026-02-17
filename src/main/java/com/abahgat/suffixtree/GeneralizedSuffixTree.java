@@ -178,19 +178,19 @@ public class GeneralizedSuffixTree {
 
         // proceed with tree construction (closely related to procedure in
         // Ukkonen's paper)
-        String text = "";
+        var text = "";
         // iterate over the string, one char at a time
         for (int i = 0; i < key.length(); i++) {
             // line 6
             int codePoint = key.codePointAt(i);
             text += new String(Character.toChars(codePoint));
             // line 7: update the tree with the new transitions due to this new char
-            Pair<Node, String> active = update(s, text, key, i, index);
+            var active = update(s, text, key, i, index);
             // line 8: make sure the active pair is canonical
-            active = canonize(active.getFirst(), active.getSecond());
+            active = canonize(active.first(), active.second());
             
-            s = active.getFirst();
-            text = active.getSecond();
+            s = active.first();
+            text = active.second();
             
             if (Character.isSupplementaryCodePoint(codePoint)) {
                 i++;
@@ -227,9 +227,9 @@ public class GeneralizedSuffixTree {
      */
     private Pair<Boolean, Node> testAndSplit(final Node inputs, final String stringPart, final int t, final String input, final int index, final int value) {
         // descend the tree as far as possible
-        Pair<Node, String> ret = canonize(inputs, stringPart);
-        Node s = ret.getFirst();
-        String str = ret.getSecond();
+        var ret = canonize(inputs, stringPart);
+        Node s = ret.first();
+        String str = ret.second();
 
         if (!"".equals(str)) {
             Edge g = s.getEdge(str.codePointAt(0));
@@ -354,10 +354,10 @@ public class GeneralizedSuffixTree {
         Node oldroot = root;
 
         // line 1b
-        Pair<Boolean, Node> ret = testAndSplit(s, stringPart.substring(0, stringPart.length() - Character.charCount(newChar)), newChar, input, index, value);
+        var ret = testAndSplit(s, stringPart.substring(0, stringPart.length() - Character.charCount(newChar)), newChar, input, index, value);
 
-        Node r = ret.getSecond();
-        boolean endpoint = ret.getFirst();
+        Node r = ret.second();
+        boolean endpoint = ret.first();
 
         Node leaf;
         // line 2
@@ -398,15 +398,15 @@ public class GeneralizedSuffixTree {
                      tempstr = tempstr.substring(Character.charCount(tempstr.codePointAt(0)));
                 }
             } else {
-                Pair<Node, String> canret = canonize(s.getSuffix(), safeCutLastChar(tempstr));
-                s = canret.getFirst();
-                tempstr = (canret.getSecond() + new String(Character.toChars(tempstr.codePointBefore(tempstr.length()))));
+                var canret = canonize(s.getSuffix(), safeCutLastChar(tempstr));
+                s = canret.first();
+                tempstr = (canret.second() + new String(Character.toChars(tempstr.codePointBefore(tempstr.length()))));
             }
 
             // line 7
             ret = testAndSplit(s, safeCutLastChar(tempstr), newChar, input, index, value);
-            r = ret.getSecond();
-            endpoint = ret.getFirst();
+            r = ret.second();
+            endpoint = ret.first();
 
         }
 
@@ -439,42 +439,12 @@ public class GeneralizedSuffixTree {
      * It contains a collection of results and the total number of results present in the GST.
      * @see GeneralizedSuffixTree#searchWithCount(java.lang.String, int) 
      */
-    public static class ResultInfo {
-
-        /**
-         * The total number of results present in the database
-         */
-        public int totalResults;
-        /**
-         * The collection of (some) results present in the GST
-         */
-        public Collection<Integer> results;
-
-        public ResultInfo(Collection<Integer> results, int totalResults) {
-            this.totalResults = totalResults;
-            this.results = results;
-        }
+    public record ResultInfo(Collection<Integer> results, int totalResults) {
     }
 
     /**
      * A private class used to return a tuples of two elements
      */
-    private class Pair<A, B> {
-
-        private final A first;
-        private final B second;
-
-        public Pair(A first, B second) {
-            this.first = first;
-            this.second = second;
-        }
-
-        public A getFirst() {
-            return first;
-        }
-
-        public B getSecond() {
-            return second;
-        }
+    private record Pair<A, B>(A first, B second) {
     }
 }
