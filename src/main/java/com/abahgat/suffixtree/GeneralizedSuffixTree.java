@@ -184,10 +184,6 @@ public class GeneralizedSuffixTree {
             // line 6
             int codePoint = key.codePointAt(i);
             text += new String(Character.toChars(codePoint));
-            
-            // use intern to make sure the resulting string is in the pool.
-            text = text.intern();
-
             // line 7: update the tree with the new transitions due to this new char
             Pair<Node, String> active = update(s, text, key, i, index);
             // line 8: make sure the active pair is canonical
@@ -404,9 +400,7 @@ public class GeneralizedSuffixTree {
             } else {
                 Pair<Node, String> canret = canonize(s.getSuffix(), safeCutLastChar(tempstr));
                 s = canret.getFirst();
-                // use intern to ensure that tempstr is a reference from the string pool
                 tempstr = (canret.getSecond() + new String(Character.toChars(tempstr.codePointBefore(tempstr.length()))));
-                tempstr = tempstr.intern();
             }
 
             // line 7
