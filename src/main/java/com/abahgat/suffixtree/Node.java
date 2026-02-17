@@ -104,7 +104,7 @@ class Node {
      * @return the first <tt>numElements</tt> associated to this node and children
      */
     Collection<Integer> getData(int numElements) {
-        Set<Integer> ret = new HashSet<>();
+        var ret = new HashSet<Integer>();
         for (int idx = 0; idx < lastIdx; idx++) {
             int num = data[idx];
             ret.add(num);
@@ -127,7 +127,7 @@ class Node {
     }
 
     private Set<Integer> computeAndCacheCountRecursive() {
-        Set<Integer> ret = new HashSet<>();
+        var ret = new HashSet<Integer>();
         for (int idx = 0; idx < lastIdx; idx++) {
             ret.add(data[idx]);
         }
@@ -238,7 +238,7 @@ class Node {
      */
     void compact() {
         if (lastIdx < data.length) {
-            int[] copy = new int[lastIdx];
+            var copy = new int[lastIdx];
             System.arraycopy(data, 0, copy, 0, lastIdx);
             data = copy;
         }
@@ -269,7 +269,7 @@ class Node {
 
     private void addIndex(int index) {
         if (lastIdx == data.length) {
-            int[] copy = new int[data.length + increment(data.length)];
+            var copy = new int[data.length + increment(data.length)];
             System.arraycopy(data, 0, copy, 0, data.length);
             data = copy;
         }

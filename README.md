@@ -31,6 +31,19 @@ In addition to those Strings, there are a set of different strings that are impl
 
 This kind of "implicit path" is important in the testAndSplit method.
 
+
+## Installation
+
+To use this library in your project, add the following dependency to your `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>com.abahgat</groupId>
+    <artifactId>suffixtree</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+</dependency>
+```
+
 ## Benchmarking
 
 The project includes a JMH (Java Microbenchmark Harness) suite to monitor performance and memory allocation, specifically to avoid regressions in Garbage Collection pressure and CPU overhead.
