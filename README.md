@@ -41,7 +41,7 @@ To use this library in your project, add the following dependency to your `pom.x
 <dependency>
     <groupId>com.abahgat</groupId>
     <artifactId>suffixtree</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
