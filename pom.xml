@@ -146,6 +146,39 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>update-readme</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <replaceregexp file="README.md"
+                                                       match="&lt;version&gt;[^&lt;]*&lt;/version&gt;"
+                                                       replace="&lt;version&gt;${project.version}&lt;/version&gt;"
+                                                       byline="true" />
+                                        <exec executable="git">
+                                            <arg value="add" />
+                                            <arg value="README.md" />
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <build>
@@ -230,27 +263,6 @@
                 </executions>
             </plugin>
 
-            <!-- Automatically update version in README.md -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>update-readme</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <replaceregexp file="README.md" match="&lt;version&gt;[^&lt;]*&lt;/version&gt;" replace="&lt;version&gt;${project.version}&lt;/version&gt;" byline="true" />
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- Release Management -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -260,6 +272,17 @@
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <releaseProfiles>release</releaseProfiles>
+                    <!-- Update and commit README only during release preparation -->
+                    <preparationGoals>clean verify antrun:run scm:checkin -Dmessage="[release] update README version"</preparationGoals>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>2.0.1</version>
+                <configuration>
+                    <includes>README.md</includes>
                 </configuration>
             </plugin>
         </plugins>
