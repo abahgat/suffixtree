@@ -3,7 +3,7 @@
     <groupId>com.abahgat</groupId>
     <artifactId>suffixtree</artifactId>
     <packaging>jar</packaging>
-    <version>2.0.0</version>
+    <version>2.0.1-SNAPSHOT</version>
 
     <name>Suffix Tree</name>
     <url>http://github.com/abahgat/suffixtree</url>
@@ -22,7 +22,7 @@
         <connection>scm:git:git://github.com/abahgat/suffixtree.git</connection>
         <developerConnection>scm:git:ssh://github.com/abahgat/suffixtree.git</developerConnection>
         <url>http://github.com/abahgat/suffixtree/tree/master</url>
-      <tag>v2.0.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <licenses>
