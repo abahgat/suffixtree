@@ -288,6 +288,17 @@ public class SuffixTreeTest {
     }
 
     @Test
+    public void testSearchAcrossSupplementaryPrefix() {
+        GeneralizedSuffixTree tree = new GeneralizedSuffixTree();
+        tree.put("😀a", 0);
+        tree.put("😀b", 1);
+
+        assertEquals(Set.of(0, 1), new HashSet<>(tree.search("😀")));
+        assertEquals(Set.of(0), new HashSet<>(tree.search("😀a")));
+        assertEquals(Set.of(1), new HashSet<>(tree.search("😀b")));
+    }
+
+    @Test
     public void testSimplestPossibleSample() {
         GeneralizedSuffixTree suffixTree = new GeneralizedSuffixTree();
         suffixTree.put("a", 0);
