@@ -146,9 +146,6 @@ public class GeneralizedSuffixTree {
                     i += lenToMatch - 1;
                 }
             }
-            if (Character.isSupplementaryCodePoint(ch)) {
-                i++;
-            }
         }
 
         return null;
